@@ -14,9 +14,10 @@ module Syft
     def total
       total_price = items.reduce(0){|s,i| s += i.price; s}
 
-      total_price *= 0.9 if !@promotion_rules.empty? && total_price >= 60
+      rule = @promotion_rules.first
+      total_price *= (1.0-rule.discount) if !rule.nil?  && total_price >= rule.value
 
-      total_price
+      total_price.round(2)
     end
   end
 end

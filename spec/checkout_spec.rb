@@ -21,18 +21,20 @@ describe Syft::Checkout do
         subject.scan(item2)
       end
 
-      it "should calculate total price scanned itens" do
+      it "should calculate total price from scanned itens" do
         expect(subject.total).to eq(11)
       end
     end
 
     describe "With Promotion Rules" do
-      let(:rule_1) {double("Rule 1: price over 60 pounds give 10% discount",
-                   type: "discount", value: 60)}
+      let(:rule_1_1) {double("Rule 1.1: price over 60 pounds give 10% discount",
+                             type: "discount", value: 60, discount: 0.1)}
+      let(:rule_1_2) {double("Rule 1.2: price over 50 pounds give 15% discount",
+                             type: "discount", value: 50, discount: 0.15)}
       let(:rule_2) {double("Rule 2: 2 Lavender hearts price drops to 8.50")}
 
-      describe "Promotion Rule 1" do
-        subject { Syft::Checkout.new([rule_1]) }
+      describe "Promotion Rule 1.1" do
+        subject { Syft::Checkout.new([rule_1_1]) }
 
         describe "Checkout total over 60" do
           before(:each) do
@@ -56,9 +58,23 @@ describe Syft::Checkout do
             expect(subject.total).to eq(54.25)
           end
         end
-
       end
 
+      describe "Promotion Rule 1.2" do
+        subject { Syft::Checkout.new([rule_1_2]) }
+
+        describe "Checkout total over 60" do
+          before(:each) do
+            subject.scan(item1)
+            subject.scan(item2)
+          end
+
+          it "should give discount" do
+            expect(subject.total).to eq(46.11)
+          end
+        end
+
+      end
     end
   end
 end
