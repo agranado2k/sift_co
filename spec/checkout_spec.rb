@@ -3,6 +3,10 @@ require "rspec"
 require_relative "../lib/checkout"
 
 describe Syft::Checkout do
+  let(:item1) {double("Lavender heart", price: 9.25)}
+  let(:item2) {double("Personalised Cufflinks", price: 45)}
+  let(:item3) {double("Kids T-shirt", price: 19.95)}
+
   it "should calculate total price 0 from empty checkout" do
     expect(subject.total).to eq(0)
   end
@@ -31,27 +35,24 @@ describe Syft::Checkout do
         subject { Syft::Checkout.new([rule_1]) }
 
         describe "Checkout total over 60" do
-          it "should give discount" do
-            item1 = double("Lavender heart", price: 9.25)
-            item2 = double("Personalised Cufflinks", price: 45)
-            item3 = double("Kids T-shirt", price: 19.95)
-
+          before(:each) do
             subject.scan(item1)
             subject.scan(item2)
             subject.scan(item3)
+          end
 
+          it "should give discount" do
             expect(subject.total).to eq(66.78)
           end
         end
 
         describe "Checkout total lower 60" do
-          it "should not give discount" do
-            item1 = double("Lavender heart", price: 9.25)
-            item2 = double("Personalised Cufflinks", price: 45)
-
+          before(:each) do
             subject.scan(item1)
             subject.scan(item2)
+          end
 
+          it "should not give discount" do
             expect(subject.total).to eq(54.25)
           end
         end
