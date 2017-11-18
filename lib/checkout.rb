@@ -8,12 +8,12 @@ module Syft
     end
 
     def scan(item)
-      @items[item.sku] = (@items.fetch(item.sku, []) << item)
+      @items[item.code] = (@items.fetch(item.code, []) << item)
     end
 
     def total
       total_price = 0
-      items.each do |sku, item_list|
+      items.each do |code, item_list|
         total_price += item_list.reduce(0){|s,i| s += i.price; s}
       end
 

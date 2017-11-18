@@ -3,9 +3,9 @@ require "rspec"
 require_relative "../lib/checkout"
 
 describe Syft::Checkout do
-  let(:item1) {double("Lavender heart", price: 9.25 , sku: "s01")}
-  let(:item2) {double("Personalised Cufflinks", price: 45, sku: "s02")}
-  let(:item3) {double("Kids T-shirt", price: 19.95, sku: "s03")}
+  let(:item1) {double("Lavender heart", price: 9.25 , code: "s01")}
+  let(:item2) {double("Personalised Cufflinks", price: 45, code: "s02")}
+  let(:item3) {double("Kids T-shirt", price: 19.95, code: "s03")}
 
   it "should calculate total price 0 from empty checkout" do
     expect(subject.total).to eq(0)
@@ -73,7 +73,7 @@ describe Syft::Checkout do
 
       xdescribe "Promotion Rule 2.1" do
         let(:rule_2_1) {double("Rule 2: 2 Lavender hearts price drops to 8.50",
-                               type: "item", value: 8.5, sku: "01")}
+                               type: "item", value: 8.5, code: "01")}
         subject { Syft::Checkout.new([rule_2_1]) }
 
         describe "Checkout with 2 items 1" do
