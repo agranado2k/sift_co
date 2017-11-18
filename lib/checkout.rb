@@ -23,8 +23,10 @@ module Syft
         
       #end
 
-      rule = @promotion_rules.first
-      total_price *= (1.0-rule.discount) if !rule.nil?  && total_price >= rule.value
+      discount_rules = @promotion_rules.select{|r| r.type == "discount"}
+      discount_rules.each do |rule|
+        total_price *= (1.0-rule.discount) if total_price >= rule.value
+      end
 
       total_price.round(2)
     end
