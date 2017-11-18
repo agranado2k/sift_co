@@ -22,5 +22,42 @@ describe Syft::Checkout do
       end
     end
 
+    describe "With Promotion Rules" do
+      let(:rule_1) {double("Rule 1: price over 60 pounds give 10% discount",
+                   type: "discount", value: 60)}
+      let(:rule_2) {double("Rule 2: 2 Lavender hearts price drops to 8.50")}
+
+      describe "Promotion Rule 1" do
+        subject { Syft::Checkout.new([rule_1]) }
+
+        describe "Checkout total over 60" do
+          it "should give discount" do
+            item1 = double("Lavender heart", price: 9.25)
+            item2 = double("Personalised Cufflinks", price: 45)
+            item3 = double("Kids T-shirt", price: 19.95)
+
+            subject.scan(item1)
+            subject.scan(item2)
+            subject.scan(item3)
+
+            expect(subject.total).to eq(66.78)
+          end
+        end
+
+        describe "Checkout total lower 60" do
+          it "should not give discount" do
+            item1 = double("Lavender heart", price: 9.25)
+            item2 = double("Personalised Cufflinks", price: 45)
+
+            subject.scan(item1)
+            subject.scan(item2)
+
+            expect(subject.total).to eq(54.25)
+          end
+        end
+
+      end
+
+    end
   end
 end

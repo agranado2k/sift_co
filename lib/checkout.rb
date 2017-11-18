@@ -1,8 +1,9 @@
 module Syft
   class Checkout
-    attr_reader :items
+    attr_reader :items, :promotion_rules
 
-    def initialize
+    def initialize(pr = [])
+      @promotion_rules = pr;
       @items = []
     end
 
@@ -11,7 +12,11 @@ module Syft
     end
 
     def total
-      items.reduce(0){|s,i| s += i.price; s}
+      total_price = items.reduce(0){|s,i| s += i.price; s}
+
+      total_price *= 0.9 if !@promotion_rules.empty? && total_price >= 60
+
+      total_price
     end
   end
 end
