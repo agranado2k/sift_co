@@ -3,6 +3,8 @@ require "rspec"
 require_relative "../lib/checkout"
 
 describe Syft::Checkout do
+  include_examples "CheckoutItem"
+
   let(:item1) {double("item 1", name: "Lavender heart", price: 9.25 , code: "001")}
   let(:item2) {double("item 2", name: "Personalised Cufflinks", price: 45, code: "002")}
   let(:item3) {double("item 3", name: "Kids T-shirt", price: 19.95, code: "003")}

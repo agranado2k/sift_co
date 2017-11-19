@@ -8,15 +8,12 @@ module Syft
     end
 
     def scan(item)
-      if @items[item.code].nil?
-        @items[item.code] = {code: item.code,
-                             price: item.price,
-                             name: item.name,
-                             quantity: 1}
+      new_item = CheckoutItem.new(item)
+      if @items[new_item.code].nil?
+        @items[new_item.code] = new_item
       else
-        @items[item.code][:quantity] += 1
+        @items[new_item.code].quantity += 1
       end
-
     end
 
     def total
@@ -29,8 +26,9 @@ module Syft
       total_price.round(2)
     end
 
+    private
     def calculate_total
-      items.reduce(0){|t, (code, item)| t += item[:price]*item[:quantity]}
+      items.reduce(0){|t, (code, item)| t += item.price * item.quantity}
     end
 
     def apply_promotion_rule_discount(total_price)
@@ -42,7 +40,8 @@ module Syft
 
     def apply_promotion_rules_on_items
       promotion_rules.select{|r| r.type == "item"}.each do |rule|
-        @items[rule.code][:price] = rule.value if @items[rule.code] && @items[rule.code][:quantity] >= rule.quantity
+        item = @items[rule.code]
+        item.price = rule.value if item && item.quantity >= rule.quantity
       end
     end
   end
