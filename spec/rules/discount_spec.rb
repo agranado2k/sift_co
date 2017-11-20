@@ -1,5 +1,4 @@
-require "rspec"
-require_relative "../../lib/rules/discount"
+require "rspec_helper"
 
 describe Syft::Rules::Discount do
   include_examples "Rule"

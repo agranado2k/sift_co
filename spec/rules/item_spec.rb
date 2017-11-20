@@ -1,6 +1,4 @@
-require "rspec"
-require_relative "../../lib/rules/item"
-require_relative "../../lib/checkout_item"
+require "rspec_helper"
 
 describe Syft::Rules::Item do
   include_examples "Rule"
@@ -26,6 +24,7 @@ describe Syft::Rules::Item do
       subject { Syft::Rules::Item.new(value: 10, code: "003", quantity: 2) }
       let(:items) {[Syft::CheckoutItem.new(item1),
                    Syft::CheckoutItem.new(item3, 2)]}
+
       it "should not give discount" do
         subject.apply(items)
 

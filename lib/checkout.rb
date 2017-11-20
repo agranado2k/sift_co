@@ -17,7 +17,8 @@ module Syft
     end
 
     def total
-      apply_promotion_rules_on_items
+      total_price = 0
+      apply_promotion_rules_on_items(total_price)
 
       total_price = calculate_total
 
@@ -32,17 +33,11 @@ module Syft
     end
 
     def apply_promotion_rule_discount(total_price)
-      promotion_rules.select{|r| r.type == "discount"}.each do |rule|
-        total_price *= (1.0-rule.discount) if total_price >= rule.value
-      end
-      total_price
+      promotion_rules.apply_discount_rules(@items.values, total_price)
     end
 
-    def apply_promotion_rules_on_items
-      promotion_rules.select{|r| r.type == "item"}.each do |rule|
-        item = @items[rule.code]
-        item.price = rule.value if item && item.quantity >= rule.quantity
-      end
+    def apply_promotion_rules_on_items(total_price)
+      promotion_rules.apply_item_rules(@items.values, total_price)
     end
   end
 end

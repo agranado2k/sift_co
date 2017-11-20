@@ -1,9 +1,8 @@
-require "rspec"
-
-require_relative "../lib/checkout"
+require "rspec_helper"
 
 describe Syft::Checkout do
   include_examples "CheckoutItem"
+  subject{ Syft::Checkout.new(Syft::PromotionRules.new()) }
 
   let(:item1) {double("item 1", name: "Lavender heart", price: 9.25 , code: "001")}
   let(:item2) {double("item 2", name: "Personalised Cufflinks", price: 45, code: "002")}
@@ -26,12 +25,18 @@ describe Syft::Checkout do
     end
 
     describe "With Promotion Rules" do
-      describe "Promotion Rule 1.1" do
-        let(:rule_1_1) {double("Rule 1.1: price over 60 pounds give 10% discount",
-                               type: "discount", value: 60, discount: 0.1)}
-        subject { Syft::Checkout.new([rule_1_1]) }
+      let(:rule_1) { {type: "discount", discount: 0.1, value: 60} }
+      let(:rule_2) { {type: "item", value: 8.5, code: "001", quantity: 2} }
+
+      describe "Promotion Rule: If you spend over £60, then you get 10% of your purchase" do
+        before(:each) do
+          @promotion_rules = Syft::PromotionRules.new
+          @promotion_rules.add_rule(rule_1)
+        end
 
         describe "Checkout total over 60" do
+          subject { Syft::Checkout.new(@promotion_rules) }
+
           before(:each) do
             subject.scan(item1)
             subject.scan(item2)
@@ -42,43 +47,17 @@ describe Syft::Checkout do
             expect(subject.total).to eq(66.78)
           end
         end
-
-        describe "Checkout total lower 60" do
-          before(:each) do
-            subject.scan(item1)
-            subject.scan(item2)
-          end
-
-          it "should not give discount" do
-            expect(subject.total).to eq(54.25)
-          end
-        end
       end
 
-      describe "Promotion Rule 1.2" do
-        let(:rule_1_2) {double("Rule 1.2: price over 50 pounds give 15% discount",
-                               type: "discount", value: 50, discount: 0.15)}
-        subject { Syft::Checkout.new([rule_1_2]) }
-
-        describe "Checkout total over 60" do
-          before(:each) do
-            subject.scan(item1)
-            subject.scan(item2)
-          end
-
-          it "should give discount" do
-            expect(subject.total).to eq(46.11)
-          end
+      describe "Promotion Rule: If you buy 2 or more lavender hearts then the price drops to £8.50 " do
+        before(:each) do
+          @promotion_rules = Syft::PromotionRules.new
+          @promotion_rules.add_rule(rule_2)
         end
 
-      end
+        describe "Checkout with 2 items 001" do
+          subject { Syft::Checkout.new(@promotion_rules) }
 
-      describe "Promotion Rule 2.1" do
-        let(:rule_2_1) {double("Rule 2: 2 Lavender hearts price drops to 8.50",
-                               type: "item", value: 8.5, code: "001", quantity: 2)}
-        subject { Syft::Checkout.new([rule_2_1]) }
-
-        describe "Checkout with 2 items 1" do
           before(:each) do
             subject.scan(item1)
             subject.scan(item3)
@@ -89,19 +68,28 @@ describe Syft::Checkout do
             expect(subject.total).to eq(36.95)
           end
         end
+      end
 
-        describe "Checkout total with only 1 item 1" do
+      describe "Apply the both Rules" do
+        before(:each) do
+          @promotion_rules = Syft::PromotionRules.new
+          @promotion_rules.add_rule(rule_1)
+          @promotion_rules.add_rule(rule_2)
+        end
+
+        describe "Checkout wiht 2 items 001 and  total over 60" do
+          subject { Syft::Checkout.new(@promotion_rules) }
           before(:each) do
             subject.scan(item1)
             subject.scan(item2)
-            subject.scan(item2)
+            subject.scan(item1)
+            subject.scan(item3)
           end
 
-          it "should not give discount" do
-            expect(subject.total).to eq(99.25)
+          it "should give discount" do
+            expect(subject.total).to eq(73.76)
           end
         end
-
       end
     end
   end

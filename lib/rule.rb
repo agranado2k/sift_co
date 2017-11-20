@@ -16,9 +16,9 @@ module Syft
 
     def self.create(rule)
       if rule[:type] == "discount"
-        Rules::Discount.new(rule)
+        Syft::Rules::Discount.new(rule)
       else
-        Rules::Item.new(rule)
+        Syft::Rules::Item.new(rule)
       end
     end
   end

@@ -1,5 +1,4 @@
-require "rspec"
-require_relative "../lib/checkout_item.rb"
+require "rspec_helper"
 
 shared_examples "CheckoutItem" do
   describe Syft::CheckoutItem do

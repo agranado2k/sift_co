@@ -1,5 +1,4 @@
-require "rspec"
-require_relative "../lib/rule.rb"
+require "rspec_helper"
 
 shared_examples "Rule" do
   describe Syft::Rule do

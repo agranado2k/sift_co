@@ -1,14 +1,15 @@
-require "rspec"
-require_relative "./rule_spec.rb"
-require_relative "../lib/promotion_rules.rb"
+require "rspec_helper"
 
 describe Syft::PromotionRules do
   include_examples "Rule"
-  let(:rule_1_1) {instance_double("Rule", type: "discount", value: 60, discount: 0.1)}
+  let(:rule_1) { {type: "discount", value: 60, discount: 0.1} }
 
-  subject { Syft::PromotionRules.new([rule_1_1]) }
+  describe "Add rules" do
+    describe "Include discount rule" do
+      before(:each) { subject.add_rule(rule_1) }
 
-  it { is_expected.to have_attributes(rules: [rule_1_1]) }
+      it { expect(subject.rules.size).to eq(1) }
+    end
 
-  it { expect{ subject.apply_rules }.to raise_error { NotImplementedError } }
+  end
 end

@@ -1,5 +1,3 @@
-require_relative "../rule"
-
 module Syft
   module Rules
     class Item < Rule
