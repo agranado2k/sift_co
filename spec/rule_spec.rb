@@ -13,5 +13,17 @@ shared_examples "Rule" do
     it { is_expected.to have_attributes(discount: nil) }
 
     it { expect{ subject.apply }.to raise_error { NotImplementedError } }
+
+    describe "Create Rules" do
+      describe "Discount type" do
+        let(:type) { {type: "discount"} }
+        it { expect(described_class.create(type)).to be_instance_of(Syft::Rules::Discount) }
+      end
+
+      describe "Item type" do
+        let(:type) { {type: "item"} }
+        it { expect(described_class.create(type)).to be_instance_of(Syft::Rules::Item) }
+      end
+    end
   end
 end

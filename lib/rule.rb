@@ -13,6 +13,14 @@ module Syft
     def apply(items=[], total=0)
       raise NotImplementedError
     end
+
+    def self.create(rule)
+      if rule[:type] == "discount"
+        Rules::Discount.new(rule)
+      else
+        Rules::Item.new(rule)
+      end
+    end
   end
 end
 
