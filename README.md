@@ -2,9 +2,8 @@
 Sift Test - Checkout
 
 It's the solution for the tech test from Sift.
-
+[![Build Status](https://travis-ci.org/agranado2k/sift_co.svg?branch=master)](https://travis-ci.org/agranado2k/sift_co)
 [![Maintainability](https://api.codeclimate.com/v1/badges/657f864b6289bd46899c/maintainability)](https://codeclimate.com/github/agranado2k/sift_co/maintainability)
-
 [![Test Coverage](https://api.codeclimate.com/v1/badges/657f864b6289bd46899c/test_coverage)](https://codeclimate.com/github/agranado2k/sift_co/test_coverage)
 
 ## Mission
