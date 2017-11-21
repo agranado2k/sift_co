@@ -15,11 +15,8 @@ module Syft
     end
 
     def self.create(rule)
-      if rule[:type] == "discount"
-        Syft::Rules::Discount.new(rule)
-      else
-        Syft::Rules::Item.new(rule)
-      end
+      type = rule[:type].capitalize
+      Object.const_get("Syft::Rules::#{type}").new(rule)
     end
   end
 end
