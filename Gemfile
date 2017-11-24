@@ -6,3 +6,5 @@ group :test, :development do
   gem 'rspec', '~> 3.7'
   gem 'simplecov', '~> 0.15.1'
 end
+
+gem 'codecov', :require => false, :group => :test
